@@ -1,6 +1,6 @@
 {
   "name": "nw-react-slider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Slider Component",
   "main": "lib/slider.js",
   "scripts": {
