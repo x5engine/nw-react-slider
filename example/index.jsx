@@ -152,13 +152,13 @@ var Index = React.createClass({
             <p className='jsx__label'>your.jsx</p>
             <div className='code'>
               <p className='code__text'>&lt;Slider</p>
-              <p className='code__text code__text--indent'>value={this.props.config.value}</p>
-              <p className='code__text code__text--indent'>min={this.props.config.min}</p>
-              <p className='code__text code__text--indent'>max={this.props.config.max}</p>
-                <p className='code__text code__text--indent'>onChange=function()&#123;&#125;</p>
-                <p className='code__text code__text--indent'>ticks={this.state.ticks === 1 ? 'True' : 'False'}</p>
-                <p className='code__text code__text--indent'>markerLabel=&#123;&#91;{markersText}&#93;&#125;</p>
-                <p className='code__text code__text--indent'>displayFollowerPopover={this.state.displayFollowerPopover === 1 ? 'True' : 'False'}/&gt;</p>
+              <p className='code__text code__text--indent'>value={'{' + this.props.config.value + '}'}</p>
+              <p className='code__text code__text--indent'>min={'{' + this.props.config.min + '}'}</p>
+              <p className='code__text code__text--indent'>max={'{' + this.props.config.max + '}'}</p>
+              <p className='code__text code__text--indent'>onChange={'{function(){}}'}</p>
+              {this.state.ticks === 1 && <p className='code__text code__text--indent'>ticks</p>}
+              {this.state.displayFollowerPopover === 1 && <p className='code__text code__text--indent'>displayFollowerPopover</p>}
+              <p className='code__text code__text--indent'>markerLabel=&#123;&#91;{markersText}&#93;&#125;/&gt;</p>
             </div>
           </div>
         </div>
