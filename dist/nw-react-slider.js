@@ -88,6 +88,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    max: React.PropTypes.number,
 	    ticks: React.PropTypes.bool,
 	    onChange: React.PropTypes.func,
+	    onDragStart: React.PropTypes.func,
+	    onDragEnd: React.PropTypes.func,
 	    markerLabel: React.PropTypes.array,
 	    displayFollowerPopover: React.PropTypes.bool
 	  },
@@ -107,7 +109,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  handleSliderChange: function handleSliderChange(value, rtPosition) {
 	    if (isFunction(this.props.onChange)) {
-	      this.props.onChange(value);
+	      // Send the value and position of the slider in case the container needs it.
+	      this.props.onChange(value, rtPosition);
 	    }
 	    this.setState({ rtPosition: rtPosition });
 	  },
@@ -126,6 +129,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        max: this.props.max,
 	        value: this.props.value,
 	        onChange: this.handleSliderChange,
+	        onDragStart: this.props.onDragStart,
+	        onDragEnd: this.props.onDragEnd,
 	        ticks: this.props.ticks,
 	        markerLabel: this.props.markerLabel }),
 	      follower
@@ -307,6 +312,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    max: React.PropTypes.number,
 	    ticks: React.PropTypes.bool,
 	    onChange: React.PropTypes.func,
+	    onDragStart: React.PropTypes.func,
+	    onDragEnd: React.PropTypes.func,
 	    markerLabel: React.PropTypes.array
 	  },
 
@@ -407,7 +414,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.props.max === this.props.min) {
 	      value = this.props.min;
 	      position = this.state.trackWidth / 2;
-	      this.setState({ value: value, position: position });
 	    } else {
 	      // find the two closest ticks to the current position
 	      var currentPercent = currentPosition / this.state.trackWidth * 100;
@@ -428,7 +434,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // update the value and position
 	      value = this.props.min + bestMatchTick;
 	      position = this.state.trackWidth * (bestMatchPercent / 100);
-	      this.setState({ value: value, position: position });
 	    }
 
 	    // fire change event if callback exists
@@ -439,6 +444,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this.props.onChange(value, rtposition);
 	    }
+
+	    // Although set state is async, pushing its invocation as late as possible
+	    this.setState({ value: value, position: position });
 
 	    return position;
 	  },
@@ -465,11 +473,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  handleUp: function handleUp(event, ui) {
+	    var position = this.state.position;
+
+	    // Do we have a drag end hook ?
+	    if (isFunction(this.props.onDragEnd)) {
+	      this.props.onDragEnd(position);
+	    }
+
 	    this.setState({ dragging: false });
-	    this.updateValueFromPosition(this.state.position);
+	    this.updateValueFromPosition(position);
 	  },
 
 	  handleDown: function handleDown(event, ui) {
+	    // Do we have a drag start hook ?
+	    if (isFunction(this.props.onDragStart)) {
+	      this.props.onDragStart(this.state.position);
+	    }
+
 	    this.setState({ dragging: true });
 	  },
 
@@ -2180,7 +2200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      maxWait,
 	      result,
 	      timerId,
-	      lastCallTime = 0,
+	      lastCallTime,
 	      lastInvokeTime = 0,
 	      leading = false,
 	      maxing = false,
@@ -2231,7 +2251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Either this is the first call, activity has stopped and we're at the
 	    // trailing edge, the system time has gone backwards and we're treating
 	    // it as the trailing edge, or we've hit the `maxWait` limit.
-	    return (!lastCallTime || (timeSinceLastCall >= wait) ||
+	    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
 	      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
 	  }
 
@@ -2245,7 +2265,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  function trailingEdge(time) {
-	    clearTimeout(timerId);
 	    timerId = undefined;
 
 	    // Only invoke if we have `lastArgs` which means `func` has been
@@ -2258,11 +2277,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  function cancel() {
-	    if (timerId !== undefined) {
-	      clearTimeout(timerId);
-	    }
-	    lastCallTime = lastInvokeTime = 0;
-	    lastArgs = lastThis = timerId = undefined;
+	    lastInvokeTime = 0;
+	    lastArgs = lastCallTime = lastThis = timerId = undefined;
 	  }
 
 	  function flush() {
@@ -2283,7 +2299,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      if (maxing) {
 	        // Handle invocations in a tight loop.
-	        clearTimeout(timerId);
 	        timerId = setTimeout(timerExpired, wait);
 	        return invokeFunc(lastCallTime);
 	      }
@@ -2312,7 +2327,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @static
 	 * @memberOf _
 	 * @since 2.4.0
-	 * @type {Function}
 	 * @category Date
 	 * @returns {number} Returns the timestamp.
 	 * @example
@@ -2320,9 +2334,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * _.defer(function(stamp) {
 	 *   console.log(_.now() - stamp);
 	 * }, _.now());
-	 * // => Logs the number of milliseconds it took for the deferred function to be invoked.
+	 * // => Logs the number of milliseconds it took for the deferred invocation.
 	 */
-	var now = Date.now;
+	function now() {
+	  return Date.now();
+	}
 
 	module.exports = now;
 
@@ -2364,8 +2380,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {number} Returns the number.
 	 * @example
 	 *
-	 * _.toNumber(3);
-	 * // => 3
+	 * _.toNumber(3.2);
+	 * // => 3.2
 	 *
 	 * _.toNumber(Number.MIN_VALUE);
 	 * // => 5e-324
@@ -2373,8 +2389,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * _.toNumber(Infinity);
 	 * // => Infinity
 	 *
-	 * _.toNumber('3');
-	 * // => 3
+	 * _.toNumber('3.2');
+	 * // => 3.2
 	 */
 	function toNumber(value) {
 	  if (typeof value == 'number') {

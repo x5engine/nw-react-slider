@@ -13,6 +13,8 @@ module.exports = React.createClass({
     max: React.PropTypes.number,
     ticks: React.PropTypes.bool,
     onChange: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragEnd: React.PropTypes.func,
     markerLabel: React.PropTypes.array,
     displayFollowerPopover: React.PropTypes.bool
   },
@@ -32,7 +34,8 @@ module.exports = React.createClass({
 
   handleSliderChange: function (value, rtPosition) {
     if (isFunction(this.props.onChange)) {
-      this.props.onChange(value)
+      // Send the value and position of the slider in case the container needs it.
+      this.props.onChange(value, rtPosition)
     }
     this.setState({rtPosition})
   },
@@ -52,6 +55,8 @@ module.exports = React.createClass({
           max={this.props.max}
           value={this.props.value}
           onChange={this.handleSliderChange}
+          onDragStart={this.props.onDragStart}
+          onDragEnd={this.props.onDragEnd}
           ticks={this.props.ticks}
           markerLabel={this.props.markerLabel} />
         {follower}

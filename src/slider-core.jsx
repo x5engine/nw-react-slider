@@ -14,6 +14,8 @@ module.exports = React.createClass({
     max: React.PropTypes.number,
     ticks: React.PropTypes.bool,
     onChange: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragEnd: React.PropTypes.func,
     markerLabel: React.PropTypes.array
   },
 
@@ -111,7 +113,6 @@ module.exports = React.createClass({
     if (this.props.max === this.props.min) {
       value = this.props.min
       position = this.state.trackWidth / 2
-      this.setState({value, position})
     } else {
       // find the two closest ticks to the current position
       var currentPercent = currentPosition / this.state.trackWidth * 100
@@ -132,7 +133,6 @@ module.exports = React.createClass({
       // update the value and position
       value = this.props.min + bestMatchTick
       position = this.state.trackWidth * (bestMatchPercent / 100)
-      this.setState({value, position})
     }
 
     // fire change event if callback exists
@@ -143,6 +143,9 @@ module.exports = React.createClass({
       }
       this.props.onChange(value, rtposition)
     }
+
+    // Although set state is async, pushing its invocation as late as possible
+    this.setState({value, position})
 
     return position
   },
@@ -169,11 +172,23 @@ module.exports = React.createClass({
   },
 
   handleUp: function (event, ui) {
+    const position = this.state.position
+
+    // Do we have a drag end hook ?
+    if (isFunction(this.props.onDragEnd)) {
+      this.props.onDragEnd(position)
+    }
+
     this.setState({dragging: false})
-    this.updateValueFromPosition(this.state.position)
+    this.updateValueFromPosition(position)
   },
 
   handleDown: function (event, ui) {
+    // Do we have a drag start hook ?
+    if (isFunction(this.props.onDragStart)) {
+      this.props.onDragStart(this.state.position)
+    }
+
     this.setState({dragging: true})
   },
 
