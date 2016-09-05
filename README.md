@@ -4,7 +4,7 @@ A React Slider
 Authors: [Drew Schuster](https://github.com/dtschust) & [Greg Mathews](https://github.com/gregsqueeb)
 
 [![npm version](https://img.shields.io/npm/v/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
-[![npm downloads](https://img.shields.io/npm/dm/nw-react-slider.svg.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
+[![npm downloads](https://img.shields.io/npm/dm/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
 
 ## Demo
 
