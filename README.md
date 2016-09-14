@@ -13,7 +13,7 @@ Authors: [Drew Schuster](https://github.com/dtschust) & [Greg Mathews](https://g
 To run the demo locally with live reload functionality:
 ```
 npm install
-npm start
+PORT=3000 npm start
 ```
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
@@ -21,7 +21,7 @@ Then open [`localhost:3000`](http://localhost:3000) in a browser.
 To run the demo locally without live reload:
 ```
 npm install
-npm run start-static
+PORT=3000 npm run start-static
 ```
 
 ## Installation
