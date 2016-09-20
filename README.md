@@ -89,11 +89,7 @@ Props:
 
 ## Contributing
 
-- Fork the project
-- Make changes
-- Double check changes work by adding it to the examples
-- Update README with appropriate docs
-- Commit and create a PR
+See CONTRIBUTING.md
 
 ## License
 
