@@ -31,9 +31,6 @@ describe('<Slider/>', function () {
       const wrapper = mount(<Slider
         onChange={onChangeStub}
         />)
-      // TODO: Post onChange fixes, remove this. We should not have to reset
-      // this unless value has been changed
-      onChangeStub.reset()
       wrapper.instance().handleSliderChange(10, 10)
       expect(onChangeStub.callCount).to.equal(1)
       wrapper.instance().handleSliderChange(11, 11)

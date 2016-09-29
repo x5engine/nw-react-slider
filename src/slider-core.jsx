@@ -13,6 +13,7 @@ module.exports = React.createClass({
     min: React.PropTypes.number,
     max: React.PropTypes.number,
     ticks: React.PropTypes.bool,
+    triggerOnChangeWhileDragging: React.PropTypes.bool,
     onChange: React.PropTypes.func,
     onDragStart: React.PropTypes.func,
     onDragEnd: React.PropTypes.func,
@@ -24,7 +25,8 @@ module.exports = React.createClass({
       value: 0,
       min: 0,
       max: 10,
-      ticks: false
+      ticks: false,
+      triggerOnChangeWhileDragging: true
     }
   },
 
@@ -51,12 +53,6 @@ module.exports = React.createClass({
       newValue = this.getBoundValue(nextProps, newValue || this.state.value)
       this.setState({value: newValue})
       this.setHandlePosition(nextProps, newValue)
-    }
-  },
-
-  componentWillUpdate: function (nextProps, nextState) {
-    if (isUndefined(this.state.position) && !isUndefined(nextState.position)) {
-      this.props.onChange(nextState.value, nextState.position)
     }
   },
 
@@ -102,9 +98,6 @@ module.exports = React.createClass({
   setHandlePosition: function (props = this.props, value = this.state.value) {
     var position = this.state.trackWidth / (props.max - props.min) * (value - props.min)
     this.setState({position})
-    if (isFunction(this.props.onChange)) {
-      this.props.onChange(value, position)
-    }
   },
 
   updateValueFromPosition: function (newPosition) {
@@ -135,19 +128,13 @@ module.exports = React.createClass({
       position = this.state.trackWidth * (bestMatchPercent / 100)
     }
 
-    // fire change event if callback exists
-    if (isFunction(this.props.onChange)) {
-      var rtposition = position
-      if (this.state.dragging) {
-        rtposition = currentPosition
-      }
-      this.props.onChange(value, rtposition)
-    }
-
     // Although set state is async, pushing its invocation as late as possible
     this.setState({value, position})
 
-    return position
+    return {
+      value,
+      position
+    }
   },
 
   cumulativeOffset: function (element) {
@@ -166,9 +153,17 @@ module.exports = React.createClass({
     }
   },
 
+  triggerOnChange: function (pos) {
+    const { value, position } = this.updateValueFromPosition(pos)
+
+    if (isFunction(this.props.onChange)) {
+      this.props.onChange(value, position)
+    }
+  },
+
   clickOnTrack: function (event) {
     var clickFromLeft = event.clientX - this.cumulativeOffset(event.target).left
-    this.updateValueFromPosition(clickFromLeft)
+    this.triggerOnChange(clickFromLeft)
   },
 
   handleUp: function (event, ui) {
@@ -180,7 +175,7 @@ module.exports = React.createClass({
     }
 
     this.setState({dragging: false})
-    this.updateValueFromPosition(position)
+    this.triggerOnChange(position)
   },
 
   handleDown: function (event, ui) {
@@ -194,7 +189,12 @@ module.exports = React.createClass({
 
   dragging: function (event, ui) {
     var pos = this.refs.drag.state.clientX || 0
-    this.updateValueFromPosition(pos)
+
+    // Do we want to trigger change handlers while dragging ?
+    if (this.props.triggerOnChangeWhileDragging) {
+      this.triggerOnChange(pos)
+    }
+
     event.preventDefault()
   },
 

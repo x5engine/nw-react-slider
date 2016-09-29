@@ -77,7 +77,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Popover = __webpack_require__(7);
 	var Slider = __webpack_require__(10);
 	var isFunction = __webpack_require__(11);
-	var classnames = __webpack_require__(20);
+	var classnames = __webpack_require__(22);
 	var isUndefined = __webpack_require__(9);
 
 	module.exports = React.createClass({
@@ -311,6 +311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    min: React.PropTypes.number,
 	    max: React.PropTypes.number,
 	    ticks: React.PropTypes.bool,
+	    triggerOnChangeWhileDragging: React.PropTypes.bool,
 	    onChange: React.PropTypes.func,
 	    onDragStart: React.PropTypes.func,
 	    onDragEnd: React.PropTypes.func,
@@ -322,7 +323,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      value: 0,
 	      min: 0,
 	      max: 10,
-	      ticks: false
+	      ticks: false,
+	      triggerOnChangeWhileDragging: true
 	    };
 	  },
 
@@ -349,12 +351,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      newValue = this.getBoundValue(nextProps, newValue || this.state.value);
 	      this.setState({ value: newValue });
 	      this.setHandlePosition(nextProps, newValue);
-	    }
-	  },
-
-	  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-	    if (isUndefined(this.state.position) && !isUndefined(nextState.position)) {
-	      this.props.onChange(nextState.value, nextState.position);
 	    }
 	  },
 
@@ -403,9 +399,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var position = this.state.trackWidth / (props.max - props.min) * (value - props.min);
 	    this.setState({ position: position });
-	    if (isFunction(this.props.onChange)) {
-	      this.props.onChange(value, position);
-	    }
 	  },
 
 	  updateValueFromPosition: function updateValueFromPosition(newPosition) {
@@ -436,19 +429,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      position = this.state.trackWidth * (bestMatchPercent / 100);
 	    }
 
-	    // fire change event if callback exists
-	    if (isFunction(this.props.onChange)) {
-	      var rtposition = position;
-	      if (this.state.dragging) {
-	        rtposition = currentPosition;
-	      }
-	      this.props.onChange(value, rtposition);
-	    }
-
 	    // Although set state is async, pushing its invocation as late as possible
 	    this.setState({ value: value, position: position });
 
-	    return position;
+	    return {
+	      value: value,
+	      position: position
+	    };
 	  },
 
 	  cumulativeOffset: function cumulativeOffset(element) {
@@ -467,9 +454,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  },
 
+	  triggerOnChange: function triggerOnChange(pos) {
+	    var _updateValueFromPosit = this.updateValueFromPosition(pos);
+
+	    var value = _updateValueFromPosit.value;
+	    var position = _updateValueFromPosit.position;
+
+
+	    if (isFunction(this.props.onChange)) {
+	      this.props.onChange(value, position);
+	    }
+	  },
+
 	  clickOnTrack: function clickOnTrack(event) {
 	    var clickFromLeft = event.clientX - this.cumulativeOffset(event.target).left;
-	    this.updateValueFromPosition(clickFromLeft);
+	    this.triggerOnChange(clickFromLeft);
 	  },
 
 	  handleUp: function handleUp(event, ui) {
@@ -481,7 +480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    this.setState({ dragging: false });
-	    this.updateValueFromPosition(position);
+	    this.triggerOnChange(position);
 	  },
 
 	  handleDown: function handleDown(event, ui) {
@@ -495,7 +494,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  dragging: function dragging(event, ui) {
 	    var pos = this.refs.drag.state.clientX || 0;
-	    this.updateValueFromPosition(pos);
+
+	    // Do we want to trigger change handlers while dragging ?
+	    if (this.props.triggerOnChangeWhileDragging) {
+	      this.triggerOnChange(pos);
+	    }
+
 	    event.preventDefault();
 	  },
 
@@ -616,7 +620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -629,8 +633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
 	 * @example
 	 *
 	 * _.isFunction(_);
@@ -641,8 +644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function isFunction(value) {
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-	  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
+	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
 	  var tag = isObject(value) ? objectToString.call(value) : '';
 	  return tag == funcTag || tag == genTag;
 	}
@@ -656,7 +658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
 	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
 	 *
 	 * @static
@@ -681,7 +683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function isObject(value) {
 	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
+	  return value != null && (type == 'object' || type == 'function');
 	}
 
 	module.exports = isObject;
@@ -2071,8 +2073,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Creates a throttled function that only invokes `func` at most once per
 	 * every `wait` milliseconds. The throttled function comes with a `cancel`
 	 * method to cancel delayed `func` invocations and a `flush` method to
-	 * immediately invoke them. Provide an options object to indicate whether
-	 * `func` should be invoked on the leading and/or trailing edge of the `wait`
+	 * immediately invoke them. Provide `options` to indicate whether `func`
+	 * should be invoked on the leading and/or trailing edge of the `wait`
 	 * timeout. The `func` is invoked with the last arguments provided to the
 	 * throttled function. Subsequent calls to the throttled function return the
 	 * result of the last `func` invocation.
@@ -2080,6 +2082,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
 	 * invoked on the trailing edge of the timeout only if the throttled function
 	 * is invoked more than once during the `wait` timeout.
+	 *
+	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
 	 *
 	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
 	 * for details over the differences between `_.throttle` and `_.debounce`.
@@ -2135,7 +2140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var isObject = __webpack_require__(12),
 	    now = __webpack_require__(16),
-	    toNumber = __webpack_require__(17);
+	    toNumber = __webpack_require__(19);
 
 	/** Used as the `TypeError` message for "Functions" methods. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
@@ -2149,14 +2154,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * milliseconds have elapsed since the last time the debounced function was
 	 * invoked. The debounced function comes with a `cancel` method to cancel
 	 * delayed `func` invocations and a `flush` method to immediately invoke them.
-	 * Provide an options object to indicate whether `func` should be invoked on
-	 * the leading and/or trailing edge of the `wait` timeout. The `func` is invoked
-	 * with the last arguments provided to the debounced function. Subsequent calls
-	 * to the debounced function return the result of the last `func` invocation.
+	 * Provide `options` to indicate whether `func` should be invoked on the
+	 * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+	 * with the last arguments provided to the debounced function. Subsequent
+	 * calls to the debounced function return the result of the last `func`
+	 * invocation.
 	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
-	 * on the trailing edge of the timeout only if the debounced function is
-	 * invoked more than once during the `wait` timeout.
+	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
+	 * invoked on the trailing edge of the timeout only if the debounced function
+	 * is invoked more than once during the `wait` timeout.
+	 *
+	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
 	 *
 	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
 	 * for details over the differences between `_.debounce` and `_.throttle`.
@@ -2277,6 +2286,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  function cancel() {
+	    if (timerId !== undefined) {
+	      clearTimeout(timerId);
+	    }
 	    lastInvokeTime = 0;
 	    lastArgs = lastCallTime = lastThis = timerId = undefined;
 	  }
@@ -2318,7 +2330,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 16 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var root = __webpack_require__(17);
 
 	/**
 	 * Gets the timestamp of the number of milliseconds that have elapsed since
@@ -2336,9 +2350,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * }, _.now());
 	 * // => Logs the number of milliseconds it took for the deferred invocation.
 	 */
-	function now() {
-	  return Date.now();
-	}
+	var now = function() {
+	  return root.Date.now();
+	};
 
 	module.exports = now;
 
@@ -2347,9 +2361,34 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(11),
-	    isObject = __webpack_require__(12),
-	    isSymbol = __webpack_require__(18);
+	var freeGlobal = __webpack_require__(18);
+
+	/** Detect free variable `self`. */
+	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+	/** Used as a reference to the global object. */
+	var root = freeGlobal || freeSelf || Function('return this')();
+
+	module.exports = root;
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
+	var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+	module.exports = freeGlobal;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(12),
+	    isSymbol = __webpack_require__(20);
 
 	/** Used as references for various `Number` constants. */
 	var NAN = 0 / 0;
@@ -2400,7 +2439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return NAN;
 	  }
 	  if (isObject(value)) {
-	    var other = isFunction(value.valueOf) ? value.valueOf() : value;
+	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
 	    value = isObject(other) ? (other + '') : other;
 	  }
 	  if (typeof value != 'string') {
@@ -2417,10 +2456,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(19);
+	var isObjectLike = __webpack_require__(21);
 
 	/** `Object#toString` result references. */
 	var symbolTag = '[object Symbol]';
@@ -2430,7 +2469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -2443,8 +2482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 4.0.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
 	 * @example
 	 *
 	 * _.isSymbol(Symbol.iterator);
@@ -2462,7 +2500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports) {
 
 	/**
@@ -2490,14 +2528,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => false
 	 */
 	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
+	  return value != null && typeof value == 'object';
 	}
 
 	module.exports = isObjectLike;
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
