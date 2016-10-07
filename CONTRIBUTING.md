@@ -19,7 +19,7 @@ We like to keep components focussed and only providing features that actually re
 ## Writing Code
 To contribute code to nw-react-slider,
 
-- Pick a bug or feature-request from the [https://github.com/NerdWallet/nw-react-slider/issues](issues list).
+- Pick a bug or feature-request from the [issues list](https://github.com/NerdWallet/nw-react-slider/issues).
 - Fork the repository and make your changes.
 - Please include the issue number and description in your commit message.
 - Include a [tldr;](http://www.dictionary.com/browse/tldr) summary of your changes.
