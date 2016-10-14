@@ -90,6 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    onChange: React.PropTypes.func,
 	    onDragStart: React.PropTypes.func,
 	    onDragEnd: React.PropTypes.func,
+	    triggerOnChangeWhileDragging: React.PropTypes.bool,
 	    markerLabel: React.PropTypes.array,
 	    displayFollowerPopover: React.PropTypes.bool
 	  },
@@ -131,6 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        onChange: this.handleSliderChange,
 	        onDragStart: this.props.onDragStart,
 	        onDragEnd: this.props.onDragEnd,
+	        triggerOnChangeWhileDragging: this.props.triggerOnChangeWhileDragging,
 	        ticks: this.props.ticks,
 	        markerLabel: this.props.markerLabel }),
 	      follower
@@ -191,7 +193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  setPosition: function setPosition() {
-	    var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+	    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
 
 	    var trackWidth = this.props.trackWidth;
 	    if (this.props.handleWidth) {
@@ -394,8 +396,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  setHandlePosition: function setHandlePosition() {
-	    var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
-	    var value = arguments.length <= 1 || arguments[1] === undefined ? this.state.value : arguments[1];
+	    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+	    var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state.value;
 
 	    var position = this.state.trackWidth / (props.max - props.min) * (value - props.min);
 	    this.setState({ position: position });
@@ -472,9 +474,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  handleUp: function handleUp(event, ui) {
-	    var position = this.state.position;
+	    var pos = this.refs.drag.state.clientX || 0;
 
+	    var _updateValueFromPosit2 = this.updateValueFromPosition(pos);
+
+	    var position = _updateValueFromPosit2.position;
 	    // Do we have a drag end hook ?
+
 	    if (isFunction(this.props.onDragEnd)) {
 	      this.props.onDragEnd(position);
 	    }
@@ -613,7 +619,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]',
-	    genTag = '[object GeneratorFunction]';
+	    genTag = '[object GeneratorFunction]',
+	    proxyTag = '[object Proxy]';
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -646,7 +653,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
 	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
 	  var tag = isObject(value) ? objectToString.call(value) : '';
-	  return tag == funcTag || tag == genTag;
+	  return tag == funcTag || tag == genTag || tag == proxyTag;
 	}
 
 	module.exports = isFunction;
@@ -2066,7 +2073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var debounce = __webpack_require__(15),
 	    isObject = __webpack_require__(12);
 
-	/** Used as the `TypeError` message for "Functions" methods. */
+	/** Error message constants. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
 
 	/**
@@ -2142,7 +2149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    now = __webpack_require__(16),
 	    toNumber = __webpack_require__(19);
 
-	/** Used as the `TypeError` message for "Functions" methods. */
+	/** Error message constants. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */

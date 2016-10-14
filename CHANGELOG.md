@@ -1,3 +1,7 @@
+# 2.0.1 (October 11, 2016) (Akshat)
+* Pass triggerOnChangeWhileDragging prop from slider to slider-core.
+* Updated demo.
+
 # 2.0.0 (September 29, 2016) (Nikhil)
 * Don't fire onChange on render.
 * Optionally opt-out of firing onChange while dragging.

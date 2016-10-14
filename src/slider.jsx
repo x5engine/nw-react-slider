@@ -15,6 +15,7 @@ module.exports = React.createClass({
     onChange: React.PropTypes.func,
     onDragStart: React.PropTypes.func,
     onDragEnd: React.PropTypes.func,
+    triggerOnChangeWhileDragging: React.PropTypes.bool,
     markerLabel: React.PropTypes.array,
     displayFollowerPopover: React.PropTypes.bool
   },
@@ -57,6 +58,7 @@ module.exports = React.createClass({
           onChange={this.handleSliderChange}
           onDragStart={this.props.onDragStart}
           onDragEnd={this.props.onDragEnd}
+          triggerOnChangeWhileDragging={this.props.triggerOnChangeWhileDragging}
           ticks={this.props.ticks}
           markerLabel={this.props.markerLabel} />
         {follower}

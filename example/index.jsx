@@ -40,7 +40,8 @@ var Index = React.createClass({
       ticks: 1,
       displayInput: 0,
       displayFollowerPopover: 0,
-      displayMarkers: 0
+      displayMarkers: 0,
+      triggerOnChangeWhileDragging: 1
     }
   },
 
@@ -99,6 +100,13 @@ var Index = React.createClass({
           <ul className='proplist'>
             <li className='proplist__item'>
               <div className='prop-text'>
+                <label className='prop-text__label'>Sigal while dragging</label>
+                <p className='prop-text__value'>{this.state.triggerOnChangeWhileDragging === 1 ? 'True' : 'False'}</p>
+              </div>
+              <Slider min={0} max={1} value={this.state.triggerOnChangeWhileDragging} onChange={this.updateBool('triggerOnChangeWhileDragging')} />
+            </li>
+            <li className='proplist__item'>
+              <div className='prop-text'>
                 <label className='prop-text__label'>Minimum</label>
                 <p className='prop-text__value'>{this.props.config.min}</p>
               </div>
@@ -146,6 +154,7 @@ var Index = React.createClass({
               value={this.props.config.value}
               onChange={this.handleSliderChange}
               ticks={this.state.ticks === 1}
+              triggerOnChangeWhileDragging={this.state.triggerOnChangeWhileDragging === 1}
               markerLabel={markers}/>
           </div>
           <div className='jsx'>
@@ -156,6 +165,7 @@ var Index = React.createClass({
               <p className='code__text code__text--indent'>min={'{' + this.props.config.min + '}'}</p>
               <p className='code__text code__text--indent'>max={'{' + this.props.config.max + '}'}</p>
               <p className='code__text code__text--indent'>onChange={'{function(){}}'}</p>
+              <p className='code__text code__text--indent'>{`triggerOnChangeWhileDragging={${this.state.triggerOnChangeWhileDragging === 1}}`}</p>
               {this.state.ticks === 1 && <p className='code__text code__text--indent'>ticks</p>}
               {this.state.displayFollowerPopover === 1 && <p className='code__text code__text--indent'>displayFollowerPopover</p>}
               <p className='code__text code__text--indent'>markerLabel=&#123;&#91;{markersText}&#93;&#125;/&gt;</p>

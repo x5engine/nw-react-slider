@@ -167,8 +167,8 @@ module.exports = React.createClass({
   },
 
   handleUp: function (event, ui) {
-    const position = this.state.position
-
+    const pos = this.refs.drag.state.clientX || 0
+    const { position } = this.updateValueFromPosition(pos)
     // Do we have a drag end hook ?
     if (isFunction(this.props.onDragEnd)) {
       this.props.onDragEnd(position)
