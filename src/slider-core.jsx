@@ -61,6 +61,10 @@ module.exports = React.createClass({
     return (!nextState.dragging)
   },
 
+  componentWillUpdate: function componentWillUpdate() {
+    this.updateTrackWidth()
+  },
+
   componentDidMount: function () {
     this.updateTrackWidth()
     this.updateTrackWidth = throttle(this.updateTrackWidth, 100, {leading: false})

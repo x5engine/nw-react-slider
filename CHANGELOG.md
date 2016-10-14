@@ -1,3 +1,6 @@
+# 2.0.2 (October 14, 2016) (Jean-Edouard Benois)
+* Update width when container width changes
+
 # 2.0.1 (October 11, 2016) (Akshat)
 * Pass triggerOnChangeWhileDragging prop from slider to slider-core.
 * Updated demo.
