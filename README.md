@@ -5,6 +5,10 @@ Authors: [Drew Schuster](https://github.com/dtschust) & [Greg Mathews](https://g
 
 [![npm version](https://img.shields.io/npm/v/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
 [![npm downloads](https://img.shields.io/npm/dm/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+## ⚠️ THIS PROJECT IS NO LONGER MAINTAINED ⚠️
+This project is no longer being actively maintained. There are some great alternatives to this project out there; we are using [rc-slider](https://github.com/react-component/slider).
 
 ## Demo
 
