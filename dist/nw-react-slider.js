@@ -7,7 +7,7 @@
 		exports["NWReactSlider"] = factory(require("react"), require("react-dom"));
 	else
 		root["NWReactSlider"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_18__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_8__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -152,119 +152,161 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _propTypes = __webpack_require__(8);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(6);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(8);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _propTypes = __webpack_require__(9);
 
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 
+	var _isUndefined = __webpack_require__(19);
+
+	var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(6);
-	var ReactDOM = __webpack_require__(18);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var isUndefined = __webpack_require__(19);
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	module.exports = React.createClass({
-	  displayName: 'popover-follow',
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	  propTypes: {
-	    position: _propTypes2.default.number,
-	    value: _propTypes2.default.number,
-	    trackWidth: _propTypes2.default.number,
-	    handleWidth: _propTypes2.default.number
-	  },
+	var Popover = function (_React$Component) {
+	  _inherits(Popover, _React$Component);
 
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      position: 0,
-	      value: 0,
-	      trackWidth: 0
-	    };
-	  },
+	  function Popover() {
+	    var _ref;
 
-	  getInitialState: function getInitialState() {
-	    return {
-	      arrowPosition: undefined,
-	      bubblePosition: undefined,
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Popover);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Popover.__proto__ || Object.getPrototypeOf(Popover)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	      arrowPosition: _this.props.arrowPosition || undefined,
+	      bubblePosition: _this.props.bubblePosition || undefined,
 	      popoverWidth: 0,
 	      arrowWidth: 0
-	    };
-	  },
-
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-
-	    this.updatePopoverAndArrowWidth();
-	    window.addEventListener('resize', function () {
-	      _this.updatePopoverAndArrowWidth();
-	    });
-	  },
-
-	  setPosition: function setPosition() {
-	    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
-
-	    var trackWidth = this.props.trackWidth;
-	    if (this.props.handleWidth) {
-	      trackWidth += this.props.handleWidth;
-	    }
-	    var spaceArrowShouldMove = this.state.popoverWidth / 2 - this.state.arrowWidth;
-
-	    if (props.position >= spaceArrowShouldMove && props.position <= this.props.trackWidth - spaceArrowShouldMove) {
-	      // Middle of the slider where the popover is completely inside the width of the slider
-	      this.setState({ bubblePosition: props.position, arrowPosition: spaceArrowShouldMove });
-	    } else if (props.position < spaceArrowShouldMove) {
-	      // Left section of the slider
-	      this.setState({ arrowPosition: props.position, bubblePosition: spaceArrowShouldMove });
-	    } else if (props.position > this.props.trackWidth - spaceArrowShouldMove) {
-	      // Right section of the slider
-	      this.setState({ arrowPosition: props.position - 2 * spaceArrowShouldMove, bubblePosition: trackWidth - spaceArrowShouldMove - this.props.handleWidth });
-	    }
-	  },
-
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setPosition(nextProps);
-	  },
-
-	  updatePopoverAndArrowWidth: function updatePopoverAndArrowWidth() {
-	    var popover = ReactDOM.findDOMNode(this.refs.popover);
-	    if (!popover) {
-	      return;
-	    }
-	    var popoverWidth = popover.offsetWidth;
-	    var arrowWidth = ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow').length > 0 ? ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow')[0].offsetWidth : 12;
-	    this.setState({ popoverWidth: popoverWidth, arrowWidth: arrowWidth }, this.setPosition);
-	  },
-
-	  render: function render() {
-	    var styles = {};
-	    if (isUndefined(this.state.arrowPosition) || isUndefined(this.state.bubblePosition)) {
-	      styles = { visibility: 'hidden' };
-	    }
-	    var popoverStyle = {
-	      display: 'block',
-	      left: this.state.bubblePosition
-	    };
-	    var arrowStyle = {
-	      left: this.state.arrowPosition
-	    };
-	    return React.createElement(
-	      'div',
-	      { style: styles, ref: 'container', className: 'popover-container' },
-	      React.createElement(
-	        'div',
-	        { role: 'tooltip', ref: 'popover', className: 'popover', style: popoverStyle },
-	        React.createElement('div', { className: 'popover__arrow', style: arrowStyle }),
-	        React.createElement(
-	          'div',
-	          { className: 'popover__content' },
-	          this.props.value
-	        )
-	      )
-	    );
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
-	});
+
+	  _createClass(Popover, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      this.updatePopoverAndArrowWidth();
+	      window.addEventListener('resize', function () {
+	        _this2.updatePopoverAndArrowWidth();
+	      });
+	    }
+	  }, {
+	    key: 'setPosition',
+	    value: function setPosition() {
+	      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+
+	      var trackWidth = this.props.trackWidth;
+	      if (this.props.handleWidth) {
+	        trackWidth += this.props.handleWidth;
+	      }
+	      var spaceArrowShouldMove = this.state.popoverWidth / 2 - this.state.arrowWidth;
+
+	      if (props.position >= spaceArrowShouldMove && props.position <= this.props.trackWidth - spaceArrowShouldMove) {
+	        // Middle of the slider where the popover is completely inside the width of the slider
+	        this.setState({ bubblePosition: props.position, arrowPosition: spaceArrowShouldMove });
+	      } else if (props.position < spaceArrowShouldMove) {
+	        // Left section of the slider
+	        this.setState({ arrowPosition: props.position, bubblePosition: spaceArrowShouldMove });
+	      } else if (props.position > this.props.trackWidth - spaceArrowShouldMove) {
+	        // Right section of the slider
+	        this.setState({ arrowPosition: props.position - 2 * spaceArrowShouldMove, bubblePosition: trackWidth - spaceArrowShouldMove - this.props.handleWidth });
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setPosition(nextProps);
+	    }
+	  }, {
+	    key: 'updatePopoverAndArrowWidth',
+	    value: function updatePopoverAndArrowWidth() {
+	      var popover = _reactDom2.default.findDOMNode(this.refs.popover);
+	      if (!popover) {
+	        return;
+	      }
+	      var popoverWidth = popover.offsetWidth;
+	      var arrowWidth = _reactDom2.default.findDOMNode(this.refs.popover).getElementsByClassName('arrow').length > 0 ? _reactDom2.default.findDOMNode(this.refs.popover).getElementsByClassName('arrow')[0].offsetWidth : 12;
+	      this.setState({ popoverWidth: popoverWidth, arrowWidth: arrowWidth }, this.setPosition);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var styles = {};
+	      if ((0, _isUndefined2.default)(this.state.arrowPosition) || (0, _isUndefined2.default)(this.state.bubblePosition)) {
+	        styles = { visibility: 'hidden' };
+	      }
+	      var popoverStyle = {
+	        display: 'block',
+	        left: this.state.bubblePosition
+	      };
+	      var arrowStyle = {
+	        left: this.state.arrowPosition
+	      };
+	      return _react2.default.createElement(
+	        'div',
+	        { style: styles, ref: 'container', className: 'popover-container' },
+	        _react2.default.createElement(
+	          'div',
+	          { role: 'tooltip', ref: 'popover', className: 'popover', style: popoverStyle },
+	          _react2.default.createElement('div', { className: 'popover__arrow', style: arrowStyle }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'popover__content' },
+	            this.props.value
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Popover;
+	}(_react2.default.Component);
+
+	Popover.propTypes = {
+	  position: _propTypes2.default.number,
+	  value: _propTypes2.default.number,
+	  trackWidth: _propTypes2.default.number,
+	  handleWidth: _propTypes2.default.number
+	};
+	Popover.defaultProps = {
+	  position: 0,
+	  value: 0,
+	  trackWidth: 0
+	};
+	exports.default = Popover;
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -275,22 +317,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	if (process.env.NODE_ENV !== 'production') {
-	  var ReactIs = __webpack_require__(10);
+	  var ReactIs = __webpack_require__(11);
 
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(13)(ReactIs.isElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(14)(ReactIs.isElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
-	  module.exports = __webpack_require__(17)();
+	  module.exports = __webpack_require__(18)();
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	// shim for using process in browser
@@ -480,21 +522,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 	if (process.env.NODE_ENV === 'production') {
-	  module.exports = __webpack_require__(11);
-	} else {
 	  module.exports = __webpack_require__(12);
+	} else {
+	  module.exports = __webpack_require__(13);
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 	/** @license React v16.13.1
@@ -515,7 +557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/** @license React v16.13.1
@@ -700,10 +742,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  })();
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -715,11 +757,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ReactIs = __webpack_require__(10);
-	var assign = __webpack_require__(14);
+	var ReactIs = __webpack_require__(11);
+	var assign = __webpack_require__(15);
 
-	var ReactPropTypesSecret = __webpack_require__(15);
-	var checkPropTypes = __webpack_require__(16);
+	var ReactPropTypesSecret = __webpack_require__(16);
+	var checkPropTypes = __webpack_require__(17);
 
 	var has = Function.call.bind(Object.prototype.hasOwnProperty);
 	var printWarning = function() {};
@@ -1298,10 +1340,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return ReactPropTypes;
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	/*
@@ -1397,7 +1439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	/**
@@ -1415,7 +1457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1430,7 +1472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var printWarning = function() {};
 
 	if (process.env.NODE_ENV !== 'production') {
-	  var ReactPropTypesSecret = __webpack_require__(15);
+	  var ReactPropTypesSecret = __webpack_require__(16);
 	  var loggedTypeFailures = {};
 	  var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
@@ -1521,10 +1563,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = checkPropTypes;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1536,7 +1578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ReactPropTypesSecret = __webpack_require__(15);
+	var ReactPropTypesSecret = __webpack_require__(16);
 
 	function emptyFunction() {}
 	function emptyFunctionWithReset() {}
@@ -1594,12 +1636,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
-
-/***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
@@ -1636,7 +1672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var React = __webpack_require__(6);
-	var ReactDOM = __webpack_require__(18);
+	var ReactDOM = __webpack_require__(8);
 	var isFunction = __webpack_require__(21);
 	var Draggable = __webpack_require__(29);
 	var isUndefined = __webpack_require__(19);
@@ -2184,7 +2220,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
-			module.exports = factory(__webpack_require__(6), __webpack_require__(18));
+			module.exports = factory(__webpack_require__(6), __webpack_require__(8));
 		else if(typeof define === 'function' && define.amd)
 			define(["react", "react-dom"], factory);
 		else if(typeof exports === 'object')

@@ -62,7 +62,7 @@ class Popover extends React.Component {
     }
     var popoverWidth = popover.offsetWidth
     var arrowWidth = ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow').length > 0 ? ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow')[0].offsetWidth : 12
-    this.setState({popoverWidth, arrowWidth} this.setPosition)
+    this.setState({popoverWidth, arrowWidth}, this.setPosition)
   }
 
   render() {
