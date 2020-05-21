@@ -1,6 +1,6 @@
 {
   "name": "super-react-slider",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Super Duper React Slider Component",
   "main": "lib/slider.js",
   "scripts": {
@@ -39,7 +39,7 @@
     ]
   },
   "peerDependencies": {
-    "react": ">=0.14.0",
+    "react": ">=0.16.0",
     "react-dom": ">=0.14.0"
   },
   "devDependencies": {

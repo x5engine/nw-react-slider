@@ -1,44 +1,38 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-var React = require('react')
-var ReactDOM = require('react-dom')
+import isUndefined from 'lodash/isUndefined';
 
-var isUndefined = require('lodash/isUndefined')
+class Popover extends React.Component {
 
-module.exports = React.createClass({
-  displayName: 'popover-follow',
-
-  propTypes: {
+  static propTypes = {
     position: PropTypes.number,
     value: PropTypes.number,
     trackWidth: PropTypes.number,
     handleWidth: PropTypes.number
-  },
+  }
 
-  getDefaultProps: function () {
-    return {
-      position: 0,
-      value: 0,
-      trackWidth: 0
-    }
-  },
+  static defaultProps = {
+    position: 0,
+    value: 0,
+    trackWidth: 0
+  }
 
-  getInitialState: function () {
-    return {
-      arrowPosition: undefined,
-      bubblePosition: undefined,
-      popoverWidth: 0,
-      arrowWidth: 0
-    }
-  },
+  state = {
+    arrowPosition: this.props.arrowPosition || undefined,
+    bubblePosition: this.props.bubblePosition || undefined,
+    popoverWidth: 0,
+    arrowWidth: 0
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.updatePopoverAndArrowWidth()
     window.addEventListener('resize', () => {
       this.updatePopoverAndArrowWidth()
     })
-  },
+  }
 
-  setPosition: function (props = this.props) {
+  setPosition (props = this.props) {
     var trackWidth = this.props.trackWidth
     if (this.props.handleWidth) {
       trackWidth += this.props.handleWidth
@@ -55,23 +49,23 @@ module.exports = React.createClass({
       // Right section of the slider
       this.setState({ arrowPosition: (props.position - 2 * spaceArrowShouldMove), bubblePosition: trackWidth - spaceArrowShouldMove - this.props.handleWidth })
     }
-  },
+  }
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setPosition(nextProps)
-  },
+  }
 
-  updatePopoverAndArrowWidth: function () {
+  updatePopoverAndArrowWidth () {
     var popover = ReactDOM.findDOMNode(this.refs.popover)
     if (!popover) {
       return
     }
     var popoverWidth = popover.offsetWidth
     var arrowWidth = ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow').length > 0 ? ReactDOM.findDOMNode(this.refs.popover).getElementsByClassName('arrow')[0].offsetWidth : 12
-    this.setState({popoverWidth, arrowWidth}, this.setPosition)
-  },
+    this.setState({popoverWidth, arrowWidth} this.setPosition)
+  }
 
-  render: function () {
+  render() {
     var styles = {}
     if (isUndefined(this.state.arrowPosition) || isUndefined(this.state.bubblePosition)) {
       styles = {visibility: 'hidden'}
@@ -94,4 +88,6 @@ module.exports = React.createClass({
       </div>
     )
   }
-})
+}
+
+export default Popover
