@@ -13,7 +13,6 @@
   position: relative;
   height: 12px;
   cursor: pointer;
-  background: -webkit-linear-gradient(left, #F660FF, #65BAFA, #8FEC51);
   background: linear-gradient(to right, #F660FF, #65BAFA, #8FEC51);
   border-radius: 6px;
   margin: 6px 12px;
@@ -35,13 +34,9 @@
   display: inline-block;
   position: absolute;
   z-index: 1;
-  -webkit-transition: -webkit-transform .2s ease;
-  transition: -webkit-transform .2s ease;
   transition: transform .2s ease;
-  transition: transform .2s ease, -webkit-transform .2s ease;
 }
 .slider-container-component .slider__handle.react-draggable-dragging {
-  -webkit-transition: none;
   transition: none;
 }
 .slider-container-component .slider__ticks,
@@ -54,8 +49,7 @@
   pointer-events: none;
 }
 .slider-container-component .slider__markers {
-  -webkit-transform: translateY(-24px);
-          transform: translateY(-24px);
+  transform: translateY(-24px);
 }
 .slider-container-component .slider__tick {
   width: 1px;
@@ -74,8 +68,7 @@
 .slider-container-component .marker {
   display: inline-block;
   position: absolute;
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   height: 10px;
 }
 .slider-container-component .marker__label {
@@ -83,22 +76,19 @@
   line-height: 1;
 }
 .slider-container-component.dragging .popover-container > .popover {
-  -webkit-transition: none;
   transition: none;
 }
 .slider-container-component .popover-container {
   margin-top: 12px;
 }
 .slider-container-component .popover-container .popover {
-  -webkit-transition: left .2s ease;
   transition: left .2s ease;
   background: #fff;
   border: 1px solid #dcdcdc;
   box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.15);
   width: 150px;
   left: -61px;
-  -webkit-transform: translateX(calc(-50% + 14px));
-          transform: translateX(calc(-50% + 14px));
+  transform: translateX(calc(-50% + 14px));
   height: 50px;
   padding: 10px;
   font-size: 14px;

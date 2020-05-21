@@ -1,18 +1,24 @@
-# nw-react-slider
-A React Slider
+# super-react-slider
+Super Duper React Slider Component
 
-Authors: [Drew Schuster](https://github.com/dtschust) & [Greg Mathews](https://github.com/gregsqueeb)
+Authors: [X5Engine](https://github.com/x5engine), Original from [Drew Schuster](https://github.com/dtschust) & [Greg Mathews](https://github.com/gregsqueeb)
 
-[![npm version](https://img.shields.io/npm/v/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
-[![npm downloads](https://img.shields.io/npm/dm/nw-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/nw-react-slider)
-[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
-
-## ⚠️ THIS PROJECT IS NO LONGER MAINTAINED ⚠️
-This project is no longer being actively maintained. There are some great alternatives to this project out there; we are using [rc-slider](https://github.com/react-component/slider).
+[![npm version](https://img.shields.io/npm/v/super-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/super-react-slider)
+[![npm downloads](https://img.shields.io/npm/dm/super-react-slider.svg?style=flat-square)](https://www.npmjs.com/package/super-react-slider)
 
 ## Demo
 
-[✨DEMO ✨](http://nerdwallet.github.io/nw-react-slider)
+[✨EPIC DEMO ✨](http://x5engine.github.io/super-react-slider)
+
+## Installation
+
+The easiest way to use super-react-slider is to install it from NPM and include it in your own build process (Webpack, Browserify, etc)
+```
+$ npm install --save super-react-slider
+```
+
+You can also use the standalone UMD build by including `dist/super-react-slider.js` or `dist/super-react-slider.min.js`, as well as the styles from `dist/super-react-slider.css` or `dist/super-react-slider.min.css`.
+
 
 To run the demo locally with live reload functionality:
 ```
@@ -28,22 +34,13 @@ npm install
 PORT=3000 npm run start-static
 ```
 
-## Installation
-
-The easiest way to use nw-react-slider is to install it from NPM and include it in your own build process (Webpack, Browserify, etc)
-```
-$ npm install --save nw-react-slider
-```
-
-You can also use the standalone UMD build by including `dist/nw-react-slider.js` or `dist/nw-react-slider.min.js`, as well as the styles from `dist/nw-react-slider.css` or `dist/nw-react-slider.min.css`.
-
 ## Example usage
 
 ```js
 /** @jsx React.DOM */
 var React = require('react')
 var ReactDOM = require('react-dom')
-var Slider = require('nw-react-slider')
+var Slider = require('super-react-slider')
 
 var App = React.createClass({
 
@@ -71,7 +68,7 @@ ReactDOM.render(<App/>, document.body)
 A `<NWReactSlider/>` element is an improved upon version of an HTML5 range type input. You are able to smoothly drag the handle no matter how large or small the number of your steps are, and you are able to style it more effectively. You can also add tick marks to your steps if you wish. `<NWReactSlider/>` is also compatible with IE9.
 
 ## Styles
-Styles are generated from `src/slider.less`. That can be pulled directly into your build process if you use `less` already, or you can pull the generated CSS from either `dist/nw-react-slider.css` or `dist/nw-react-slider.min.css`.
+Styles are generated from `src/slider.less`. That can be pulled directly into your build process if you use `less` already, or you can pull the generated CSS from either `dist/super-react-slider.css` or `dist/super-react-slider.min.css`.
 
 ## API
 Props:

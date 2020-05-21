@@ -1,16 +1,16 @@
 {
-  "name": "nw-react-slider",
+  "name": "super-react-slider",
   "version": "2.0.1",
-  "description": "Slider Component",
+  "description": "Super Duper React Slider Component",
   "main": "lib/slider.js",
   "scripts": {
     "build:lib": "babel ./src --out-dir ./lib --source-maps --presets es2015,react,stage-0",
-    "build:umd": "NODE_ENV=development webpack --config webpack.config.js",
-    "build:umd:min": "NODE_ENV=production webpack --config webpack.config.js",
-    "build:example": "NODE_ENV=production webpack --inline --progress --colors --config example/webpack.example.config.js",
+    "build:umd": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "build:umd:min": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build:example": "cross-env NODE_ENV=production webpack --inline --progress --colors --config example/webpack.example.config.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min && npm run build:example",
     "clean": "rimraf lib dist example/bundle.js",
-    "start": "NODE_ENV=development webpack-dev-server --hot --inline --progress --colors --config example/webpack.example.config.js",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --progress --colors --config example/webpack.example.config.js",
     "start-static": "npm run build:example && cd example && live-server",
     "prepublish": "npm run clean && npm run build",
     "lint": "standard --verbose",
@@ -18,17 +18,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NerdWallet/nw-react-slider.git"
+    "url": "git+https://github.com/x5engine/super-react-slider.git"
   },
-  "author": "Greg Mathews <greg.m@nerdwallet.com>",
+  "author": "X5Engine <contact@x5engine.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NerdWallet/nw-react-slider/issues"
+    "url": "https://github.com/x5engine/super-react-slider/issues"
   },
-  "homepage": "https://github.com/NerdWallet/nw-react-slider#readme",
+  "homepage": "https://github.com/x5engine/super-react-slider#readme",
   "dependencies": {
     "classnames": "^2.2.3",
     "lodash": "^4.0.1",
+    "prop-types": "^15.7.2",
     "react-draggable": "1.3.7"
   },
   "standard": {
@@ -43,7 +44,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
-    "babel-cli": "^6.4.5",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.4.5",
     "babel-eslint": "^4.1.6",
     "babel-loader": "^6.2.1",
@@ -79,7 +80,7 @@
     "react",
     "react-component",
     "greg",
-    "NerdWallet",
+    "x5engine",
     "ui"
   ]
 }
