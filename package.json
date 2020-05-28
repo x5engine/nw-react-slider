@@ -1,6 +1,6 @@
 {
   "name": "super-react-slider",
-  "version": "2.0.2",
+  "version": "2.0.7",
   "description": "Super Duper React Slider Component",
   "main": "lib/slider.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "classnames": "^2.2.3",
     "lodash": "^4.0.1",
     "prop-types": "^15.7.2",
-    "react-draggable": "1.3.7"
+    "react-draggable": "4.4.2"
   },
   "standard": {
     "parser": "babel-eslint",
